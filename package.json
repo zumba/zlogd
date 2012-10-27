@@ -14,7 +14,8 @@
     "logging"
   ],
   "dependencies": {
-    "winston": "0.6.x"
+    "winston": "0.6.x",
+    "socket.io": "0.9.x"
   },
   "devDependencies": {
     "vows": "0.6.x"
