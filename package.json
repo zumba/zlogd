@@ -1,0 +1,29 @@
+{
+  "name": "zlogd",
+  "description": "Log server",
+  "version": "0.0.1",
+  "author": "Zumba Fitness <engineering@zumba.com>",
+  "maintainers": [
+    "Juan Basso <juan.basso@zumba.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zumba/zlogd.git"
+  },
+  "keywords": [
+    "logging"
+  ],
+  "dependencies": {
+    "winston": "0.6.x"
+  },
+  "devDependencies": {
+    "vows": "0.6.x"
+  },
+  "main": "./lib/server",
+  "scripts": {
+    "test": "vows --spec --isolate"
+  },
+  "engines": {
+    "node": ">= 0.6.0"
+  }
+}
