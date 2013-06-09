@@ -1,10 +1,11 @@
 {
   "name": "zlogd",
-  "description": "Log server",
+  "description": "Logging server for external apps.",
   "version": "0.0.1",
   "author": "Zumba Fitness <engineering@zumba.com>",
   "maintainers": [
-    "Juan Basso <juan.basso@zumba.com>"
+    "Juan Basso <juan.basso@zumba.com>",
+    "Chris Saylor <christopher.saylor@zumba.com>"
   ],
   "repository": {
     "type": "git",
@@ -14,19 +15,18 @@
     "logging"
   ],
   "dependencies": {
-    "winston": "0.6.x",
-    "socket.io": "0.9.x",
-    "express": "3.x",
-    "jade": "*"
+    "winston": "0.7.x",
+    "async": "0.2.x"
   },
   "devDependencies": {
-    "vows": "0.6.x"
+    "vows": "0.7.x"
   },
-  "main": "./lib/server",
+  "main": "./src/server",
   "scripts": {
+    "start": "node ./src/server.js",
     "test": "vows --spec --isolate"
   },
   "engines": {
-    "node": ">= 0.6.0"
+    "node": ">= 0.10.0"
   }
 }
