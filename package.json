@@ -21,9 +21,9 @@
   "devDependencies": {
     "vows": "0.7.x"
   },
-  "main": "./src/server",
+  "main": "./src/zlogd",
   "scripts": {
-    "start": "node ./src/server.js",
+    "start": "node ./src/zlogd.js",
     "test": "vows --spec --isolate"
   },
   "engines": {

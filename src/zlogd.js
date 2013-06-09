@@ -148,7 +148,8 @@ if (cluster.isMaster) {
 
 	// Setup winston logging
 	var transports = require(__dirname + '/../transports.json'),
-		transportType, transportConfig;
+		transportType, 
+		transportConfig;
 	for (var i in transports) {
 		switch (transports[i].type) {
 			case 'file':
