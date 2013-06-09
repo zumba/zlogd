@@ -6,10 +6,17 @@ var cluster = require('cluster'),
 	winston = require('winston'),
 	async = require('async');
 
-// Config the UNIX socket file
-var SOCK_FILE = process.env.SOCK_FILE || '/tmp/zlog.sock',
-	WORKERS = process.env.WORKERS || require('os').cpus().length,
-	chunkDelimiter = process.env.DELIMITER || ';;',
+// Process configuration
+var config = {
+	sockfile: process.env.SOCK_FILE || '/tmp/zlog.sock',
+	workers: process.env.WORKERS || require('os').cpus().length,
+	statMonitor: process.env.STAT_MONITOR || false,
+	statPulse: process.env.STAT_PULSE || 3000,
+	chunkDelimiter: process.env.DELIMITER || ';;'
+}
+
+
+var statCount = 0,
 	worker;
 
 // Worker API
@@ -41,10 +48,23 @@ var workerApi = {
 	}
 }
 
+var statApi = {
+	lastCount: 0,
+	check: function() {
+		work = statCount - statApi.lastCount;
+		console.log({
+			time: new Date().getTime(),
+			work: work,
+			rate: work / (config.statPulse / 1000)
+		});
+		statApi.lastCount = statCount;
+	}
+}
+
 if (cluster.isMaster) {
 
 	// Remove old socket files
-	fs.unlink(SOCK_FILE, function (error) {
+	fs.unlink(config.sockfile, function (error) {
 		if (error) {
 			console.log('Error removing old sock file', error);
 			return;
@@ -52,7 +72,7 @@ if (cluster.isMaster) {
 	});
 
 	console.log('Master process starting.');
-	for (var i = WORKERS; i > 0; i--) {
+	for (var i = config.workers; i > 0; i--) {
 		worker = cluster.fork();
 		console.log('Worker[' + worker.id + '] started.');
 	}
@@ -71,7 +91,13 @@ if (cluster.isMaster) {
 	// Be a good master and listen to your workers!
 	Object.keys(cluster.workers).forEach(function(id) {
 		cluster.workers[id].on('message', function(workerMessage) {
-			// Placeholder for possible messages from this worker
+			switch (workerMessage.type) {
+				case 'complete':
+					statCount += workerMessage.data;
+					break;
+				default:
+					console.log('Master does not understand message.');
+			}
 		});
 	});
 
@@ -87,8 +113,8 @@ if (cluster.isMaster) {
 
 		// Delegate the work to the workers
 		socket.on('end', function() {
-			workToBeDone = socketData.split(chunkDelimiter);
-			split = Math.ceil(workToBeDone.length / WORKERS);
+			workToBeDone = socketData.split(config.chunkDelimiter);
+			split = Math.ceil(workToBeDone.length / config.workers);
 			for (var i in cluster.workers) {
 				cluster.workers[i].send({
 					type: 'work',
@@ -101,14 +127,22 @@ if (cluster.isMaster) {
 	});
 
 	// Start the server
-	server.listen(SOCK_FILE, function () {
-		fs.chmod(SOCK_FILE, parseInt('777', 8), function (error) {
+	server.listen(config.sockfile, function () {
+		fs.chmod(config.sockfile, parseInt('777', 8), function (error) {
 			if (error) {
 				console.log('Socket permission failed.', error);
 			}
 		});
-		console.log('Master listening to socketfile: ' + SOCK_FILE);
+		console.log('Master listening to socketfile: ' + config.sockfile);
 	});
+
+	// Statistics reporting
+	if (config.statMonitor) {
+		console.log('Stat monitor enabled. [' + config.statPulse + ']');
+		setInterval(statApi.check, config.statPulse);
+	} else {
+		console.log('Stat monitor disabled.');
+	}
 
 } else {
 
@@ -123,6 +157,13 @@ if (cluster.isMaster) {
 		switch (message.type) {
 			case 'work':
 				async.each(message.data, workerApi.logChunkContent);
+				if (config.statMonitor) {
+					// Communicate completion statistics to master stat tracker
+					process.send({
+						type: 'complete',
+						data: message.data.length
+					});
+				}
 				break;
 			default:
 				console.log('Worker does not understand message.');
