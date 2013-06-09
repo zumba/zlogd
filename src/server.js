@@ -147,8 +147,19 @@ if (cluster.isMaster) {
 } else {
 
 	// Setup winston logging
-	// @todo implement json require to get winston transports to instantiate
-	winston.add(winston.transports.File, { filename: '/tmp/out.log' });
+	var transports = require(__dirname + '/../transports.json'),
+		transportType, transportConfig;
+	for (var i in transports) {
+		switch (transports[i].type) {
+			case 'file':
+				transportType = winston.transports.File;
+				transportConfig = transports[i].config
+				break;
+			default:
+				console.log('Unknown transport: ' + transports[i].type);
+		}
+		winston.add(transportType, transportConfig);
+	}
 	winston.remove(winston.transports.Console);
 
 	// Listen to messages from the master

@@ -1,0 +1,8 @@
+[
+	{
+		"type": "file",
+		"config": {
+			"filename": "/tmp/out.log" 
+		}
+	}
+]
