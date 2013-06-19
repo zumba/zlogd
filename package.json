@@ -1,7 +1,7 @@
 {
   "name": "zlogd",
-  "description": "Logging server for external apps.",
-  "version": "0.0.1",
+  "description": "Logging collector for external apps to ship logs.",
+  "version": "0.1.0",
   "author": "Zumba Fitness <engineering@zumba.com>",
   "maintainers": [
     "Juan Basso <juan.basso@zumba.com>",
@@ -16,10 +16,8 @@
   ],
   "dependencies": {
     "winston": "0.7.x",
+    "winston-logstash": "0.1.x",
     "async": "0.2.x"
-  },
-  "devDependencies": {
-    "vows": "0.7.x"
   },
   "main": "./src/zlogd",
   "scripts": {

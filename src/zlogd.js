@@ -4,6 +4,7 @@ var cluster = require('cluster'),
 	net = require('net'),
 	fs = require('fs'),
 	winston = require('winston'),
+	logstash = require('winston-logstash'),
 	async = require('async');
 
 // Process configuration
@@ -154,7 +155,11 @@ if (cluster.isMaster) {
 		switch (transports[i].type) {
 			case 'file':
 				transportType = winston.transports.File;
-				transportConfig = transports[i].config
+				transportConfig = transports[i].config;
+				break;
+			case 'logstash':
+				transportType = winston.transports.Logstash;
+				transportConfig = transports[i].config;
 				break;
 			default:
 				console.log('Unknown transport: ' + transports[i].type);
