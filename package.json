@@ -1,7 +1,13 @@
 {
   "name": "zlogd",
-  "description": "Logging collector for external apps to ship logs.",
+  "description": "Socket server for external apps to ship logs in a non-blocking fashion.",
   "version": "0.1.0",
+  "keywords": [
+    "logging",
+    "log",
+    "log shipping",
+    "log server"
+  ],
   "author": "Zumba Fitness <engineering@zumba.com>",
   "maintainers": [
     "Juan Basso <juan.basso@zumba.com>",
@@ -11,19 +17,19 @@
     "type": "git",
     "url": "https://github.com/zumba/zlogd.git"
   },
-  "keywords": [
-    "logging"
-  ],
+  "bin": {
+    "zlogd": "./src/zlogd"
+  },
+  "main": "./src/zlogd",
   "dependencies": {
     "winston": "0.7.x",
     "winston-logstash": "0.1.x",
     "async": "0.2.x"
   },
-  "main": "./src/zlogd",
   "scripts": {
-    "start": "node ./src/zlogd.js",
-    "test": "vows --spec --isolate"
+    "start": "node ./src/zlogd.js"
   },
+  "license": "MIT",
   "engines": {
     "node": ">= 0.10.0"
   }
