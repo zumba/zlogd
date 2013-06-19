@@ -17,7 +17,7 @@ Several process variables can be set to alter the runtime of Zlogd:
 * `WORKERS` - Number of workers to use (default: System number of CPUs)
 * `STAT_MONITOR` - Should the stat monitor run? (default: `0`)
 * `STAT_PULSE` - How often will the stats aggregate/display? (default: `3000` milliseconds)
-* `DELIMITER` - What is the delimiter that separates log messages? (default: `??`)
+* `DELIMITER` - What is the delimiter that separates log messages? (default: `;;`)
 
 ```shell
 npm start
