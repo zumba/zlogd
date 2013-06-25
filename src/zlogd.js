@@ -37,6 +37,7 @@ var workerApi = {
 		params = {
 			grouper: content.grouper || 'default',
 			category: content.category || 'default',
+			source: content.source || 'default',
 			meta: content.meta || {},
 			timestamp: content.timestamp || new Date().getTime(),
 		};
