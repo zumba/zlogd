@@ -65,6 +65,8 @@ var statApi = {
 
 if (cluster.isMaster) {
 
+	process.title = 'zlogd';
+
 	// Remove old socket files
 	fs.unlink(config.sockfile, function (error) {
 		if (error) {
@@ -87,6 +89,11 @@ if (cluster.isMaster) {
 		console.error('Worker ' + worker.process.pid + ' died');
 		if (worker.suicide) {
 			cluster.fork();
+		} else {
+			if (Object.keys(cluster.workers).length <= 0) {
+				console.error('No workers left, ending main process.');
+				process.exit(1);
+			}
 		}
 	});
 
@@ -147,6 +154,8 @@ if (cluster.isMaster) {
 	}
 
 } else {
+
+	process.title = 'zlogd-worker';
 
 	// Setup winston logging
 	var transports = require(__dirname + '/../transports.json'),
