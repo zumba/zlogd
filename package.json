@@ -1,7 +1,7 @@
 {
   "name": "zlogd",
   "description": "Socket server for external apps to ship logs in a non-blocking fashion.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "keywords": [
     "logging",
     "log",
