@@ -4,16 +4,18 @@ Logging server for external apps that communicates over unix sock files.
 
 ## Install
 
-```shell
-npm install zlogd
-cp transports.json-dist transports.json
-```
-
-Or you can install globally:
+#### For Typical Usage
 
 ```shell
 npm install -g zlogd
-cp /path/to/your/usr/local/bin/zlogd/transports.json-dist transports.json
+cp /path/to/your/usr/local/bin/zlogd/transports.json-dist /path/to/your/usr/local/bin/zlogd/transports.json
+```
+
+#### For Local Development
+
+```shell
+npm install zlogd
+cp transports.json-dist transports.json
 ```
 
 ## Configuring
@@ -22,7 +24,7 @@ You can configure the transports to ship the logs.
 
 Currently supported transports:
 
-* `file`
+* `file` (see [winston file configuration](https://github.com/flatiron/winston/blob/master/docs/transports.md#file-transport))
 
 ```json
 {
@@ -33,7 +35,7 @@ Currently supported transports:
 }
 ```
 
-* `logstash`
+* `logstash` (see [winston-logstash](https://github.com/jaakkos/winston-logstash))
 
 ```json
 {
@@ -47,6 +49,8 @@ Currently supported transports:
 
 ## Running
 
+#### Environment Switches
+
 Several process variables can be set to alter the runtime of Zlogd:
 
 * `SOCK_FILE` - Path of the unix socket file (default: `/tmp/zlogd.sock`)
@@ -54,6 +58,14 @@ Several process variables can be set to alter the runtime of Zlogd:
 * `STAT_MONITOR` - Should the stat monitor run? (default: `0`)
 * `STAT_PULSE` - How often will the stats aggregate/display? (default: `3000` milliseconds)
 * `DELIMITER` - What is the delimiter that separates log messages? (default: `;;`)
+
+#### Command Line Switches
+
+As of `0.2.x`, CLI commands are available:
+
+* `-f` - Run process in forground.
+* `-V` - Get current version.
+* `-h` - List all commands
 
 Local:
 
@@ -67,11 +79,7 @@ global:
 zlogd
 ```
 
-### Ex: Start with stat monitor on
-
-```shell
-STAT_MONITOR=1 zlogd
-```
+As of version `0.2.0`, running this process will default to running as a daemon. You can view the processes in linux/mac by doing `ps -A | grep -i zlogd`.
 
 ## Send a Log Message
 
@@ -89,3 +97,9 @@ $packet = json_encode(array(
 )) . $delimiter;
 fputs($socket, $packet, strlen($packet));
 ```
+
+## Todo
+
+* Add upstart script for managing processes.
+* Prevent duplicate runs (possibly generate a lock file and delete on exit).
+* Add formal documentation to a `/docs` directory.
