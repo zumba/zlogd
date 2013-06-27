@@ -16,9 +16,10 @@ var config = {
 	chunkDelimiter: process.env.DELIMITER || ';;'
 }
 
-
 var statCount = 0,
-	worker;
+	worker,
+	out = fs.openSync('./out.log', 'a'),
+	err = fs.openSync('./out.log', 'a');
 
 // Worker API
 var workerApi = {
@@ -66,6 +67,19 @@ var statApi = {
 if (cluster.isMaster) {
 
 	process.title = 'zlogd';
+
+	// Set off the process as a daemon
+	if (!process.env.CHILD_FORKED) {
+		var env = process.env;
+		env.CHILD_FORKED = 1;
+		var child = require('child_process').spawn('node', [__filename], {
+			env: env,
+			detached: false,
+			stdio: [ 'ignore', out, err ]
+		});
+		child.unref();
+		process.exit(0);
+	}
 
 	// Remove old socket files
 	fs.unlink(config.sockfile, function (error) {
