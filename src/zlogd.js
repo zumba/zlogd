@@ -5,7 +5,8 @@ var cluster = require('cluster'),
 	fs = require('fs'),
 	winston = require('winston'),
 	logstash = require('winston-logstash'),
-	async = require('async');
+	async = require('async'),
+	command = require('commander');
 
 // Process configuration
 var config = {
@@ -68,11 +69,19 @@ if (cluster.isMaster) {
 
 	process.title = 'zlogd';
 
+	command
+		.version('0.2.0')
+		.option('-f, --forground', 'Run zlogd in the forground.')
+		.parse(process.argv);
+
 	// Set off the process as a daemon
-	if (!process.env.CHILD_FORKED) {
-		var env = process.env;
+	if (!process.env.CHILD_FORKED && !command.forground) {
+		var env = process.env,
+			cmd = '',
+			args = command.args;
 		env.CHILD_FORKED = 1;
-		var child = require('child_process').spawn('node', [__filename], {
+		args.unshift(__filename);
+		var child = require('child_process').spawn('node', args, {
 			env: env,
 			detached: false,
 			stdio: [ 'ignore', out, err ]
