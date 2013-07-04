@@ -1,7 +1,7 @@
 {
   "name": "zlogd",
   "description": "Socket server for external apps to ship logs in a non-blocking fashion.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "keywords": [
     "logging",
     "log",
@@ -25,7 +25,6 @@
     "winston": "0.7.x",
     "winston-logstash": "0.1.x",
     "async": "0.2.x",
-    "commander": "1.2.x"
     "commander": "1.2.x",
     "underscore": "1.4.x"
   },

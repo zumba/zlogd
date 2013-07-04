@@ -92,7 +92,7 @@ if (cluster.isMaster) {
 	process.title = 'zlogd';
 
 	command
-		.version('0.2.0')
+		.version('0.2.1')
 		.option('-f, --forground', 'Run zlogd in the forground.')
 		.option('-w, --workers [number]', 'Run zlogd with set number of workers. Defaulting to number of CPUs.')
 		.option('-i, --input-socketfile [path]', 'Path (/tmp/zlog.sock) to sock file for zlogd to listen.', '/tmp/zlog.sock')
