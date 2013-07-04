@@ -61,11 +61,16 @@ Several process variables can be set to alter the runtime of Zlogd:
 
 #### Command Line Switches
 
-As of `0.2.x`, CLI commands are available:
+As of `0.2.x`, CLI commands are available that can be used in place of environment variables:
 
-* `-f` - Run process in forground.
-* `-V` - Get current version.
-* `-h` - List all commands
+* `-h, --help` - output usage information
+* `-V, --version` - output the version number
+* `-f, --forground` - Run zlogd in the forground.
+* `-w, --workers [number]` - Run zlogd with set number of workers. Defaulting to number of CPUs.
+* `-i, --input-socketfile [path]` - Path (/tmp/zlog.sock) to sock file for zlogd to listen.
+* `-d, --delimiter [delimiter]` - The delimiter symbol (;;) to indicate to zlogd separate messages per request.
+* `-s, --stat-monitor` - Run zlogd with a statmonitor.
+* `-p, --stat-pulse [milliseconds]` - Stat monitor pulses at this rate (3000).
 
 Local:
 
