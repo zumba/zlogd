@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Zlogd by zumba</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Zlogd</h1>
+        <p>Socket server for external apps to ship logs in a non-blocking fashion.</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/zumba/zlogd" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/zumba/zlogd/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/zumba/zlogd/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>
+<a name="zlogd" class="anchor" href="#zlogd"><span class="octicon octicon-link"></span></a>Zlogd</h1>
+
+<p>Logging server for external apps that communicates over unix sock files.</p>
+
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<h4>
+<a name="for-typical-usage" class="anchor" href="#for-typical-usage"><span class="octicon octicon-link"></span></a>For Typical Usage</h4>
+
+<pre lang="shell"><code>npm install -g zlogd
+cp /path/to/your/usr/local/bin/zlogd/transports.json-dist /path/to/your/usr/local/bin/zlogd/transports.json
+</code></pre>
+
+<h4>
+<a name="for-local-development" class="anchor" href="#for-local-development"><span class="octicon octicon-link"></span></a>For Local Development</h4>
+
+<pre lang="shell"><code>npm install zlogd
+cp transports.json-dist transports.json
+</code></pre>
+
+<h2>
+<a name="configuring" class="anchor" href="#configuring"><span class="octicon octicon-link"></span></a>Configuring</h2>
+
+<p>You can configure the transports to ship the logs.</p>
+
+<p>Currently supported transports:</p>
+
+<ul>
+<li>
+<code>file</code> (see <a href="https://github.com/flatiron/winston/blob/master/docs/transports.md#file-transport">winston file configuration</a>)</li>
+</ul><div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"type"</span><span class="p">:</span> <span class="s2">"file"</span><span class="p">,</span>
+    <span class="nt">"config"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"filename"</span><span class="p">:</span> <span class="s2">"/tmp/out.log"</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<ul>
+<li>
+<code>logstash</code> (see <a href="https://github.com/jaakkos/winston-logstash">winston-logstash</a>)</li>
+</ul><div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"type"</span><span class="p">:</span> <span class="s2">"logstash"</span><span class="p">,</span>
+    <span class="nt">"config"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"host"</span><span class="p">:</span> <span class="s2">"127.0.0.1"</span><span class="p">,</span>
+        <span class="nt">"port"</span><span class="p">:</span> <span class="mi">28777</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="running" class="anchor" href="#running"><span class="octicon octicon-link"></span></a>Running</h2>
+
+<h4>
+<a name="environment-switches" class="anchor" href="#environment-switches"><span class="octicon octicon-link"></span></a>Environment Switches</h4>
+
+<p>Several process variables can be set to alter the runtime of Zlogd:</p>
+
+<ul>
+<li>
+<code>SOCK_FILE</code> - Path of the unix socket file (default: <code>/tmp/zlogd.sock</code>)</li>
+<li>
+<code>WORKERS</code> - Number of workers to use (default: System number of CPUs)</li>
+<li>
+<code>STAT_MONITOR</code> - Should the stat monitor run? (default: <code>0</code>)</li>
+<li>
+<code>STAT_PULSE</code> - How often will the stats aggregate/display? (default: <code>3000</code> milliseconds)</li>
+<li>
+<code>DELIMITER</code> - What is the delimiter that separates log messages? (default: <code>;;</code>)</li>
+</ul><h4>
+<a name="command-line-switches" class="anchor" href="#command-line-switches"><span class="octicon octicon-link"></span></a>Command Line Switches</h4>
+
+<p>As of <code>0.2.x</code>, CLI commands are available that can be used in place of environment variables:</p>
+
+<ul>
+<li>
+<code>-h, --help</code> - output usage information</li>
+<li>
+<code>-V, --version</code> - output the version number</li>
+<li>
+<code>-f, --forground</code> - Run zlogd in the forground.</li>
+<li>
+<code>-w, --workers [number]</code> - Run zlogd with set number of workers. Defaulting to number of CPUs.</li>
+<li>
+<code>-i, --input-socketfile [path]</code> - Path (/tmp/zlog.sock) to sock file for zlogd to listen.</li>
+<li>
+<code>-d, --delimiter [delimiter]</code> - The delimiter symbol (;;) to indicate to zlogd separate messages per request.</li>
+<li>
+<code>-s, --stat-monitor</code> - Run zlogd with a statmonitor.</li>
+<li>
+<code>-p, --stat-pulse [milliseconds]</code> - Stat monitor pulses at this rate (3000).</li>
+</ul><p>Local:</p>
+
+<pre lang="shell"><code>npm start
+</code></pre>
+
+<p>global:</p>
+
+<pre lang="shell"><code>zlogd
+</code></pre>
+
+<p>As of version <code>0.2.0</code>, running this process will default to running as a daemon. You can view the processes in linux/mac by doing <code>ps -A | grep -i zlogd</code>.</p>
+
+<h2>
+<a name="send-a-log-message" class="anchor" href="#send-a-log-message"><span class="octicon octicon-link"></span></a>Send a Log Message</h2>
+
+<p>Here is an example PHP script sending a log message to zlogd:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="nv">$socket</span> <span class="o">=</span> <span class="nb">fsockopen</span><span class="p">(</span><span class="s1">'unix:///tmp/zlog.sock'</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="nv">$delimiter</span> <span class="o">=</span> <span class="s1">';;'</span><span class="p">;</span>
+<span class="nv">$packet</span> <span class="o">=</span> <span class="nb">json_encode</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+        <span class="s1">'level'</span> <span class="o">=&gt;</span> <span class="s1">'debug'</span><span class="p">,</span>
+        <span class="s1">'message'</span> <span class="o">=&gt;</span> <span class="s1">'hello world!'</span>
+<span class="p">))</span> <span class="o">.</span> <span class="nv">$delimiter</span><span class="p">;</span>
+<span class="nb">fputs</span><span class="p">(</span><span class="nv">$socket</span><span class="p">,</span> <span class="nv">$packet</span><span class="p">,</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$packet</span><span class="p">));</span>
+</pre></div>
+
+<h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>Todo</h2>
+
+<ul>
+<li>Add upstart script for managing processes.</li>
+<li>Prevent duplicate runs (possibly generate a lock file and delete on exit).</li>
+<li>Add formal documentation to a <code>/docs</code> directory.</li>
+</ul>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/zumba">zumba</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
